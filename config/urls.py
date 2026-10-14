@@ -10,6 +10,8 @@ from api.views import (
     RegisterView,
     PatientListCreateView,
     PatientDetailView,
+    DoctorListCreateView,
+    DoctorDetailView,
 )
 from api.serializers import EmailTokenObtainPairSerializer
 
@@ -27,4 +29,6 @@ urlpatterns = [
 
     path("api/patients/", PatientListCreateView.as_view(), name="patient-list-create"),
     path("api/patients/<int:pk>/", PatientDetailView.as_view(), name="patient-detail"),
+    path("api/doctors/", DoctorListCreateView.as_view(), name="doctor-list-create"),
+    path("api/doctors/<int:pk>/", DoctorDetailView.as_view(), name="doctor-detail"),
 ]

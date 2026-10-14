@@ -2,8 +2,9 @@
 from rest_framework import generics
 from rest_framework.permissions import AllowAny, IsAuthenticated
 
-from .models import Patient
-from .serializers import RegisterSerializer, PatientSerializer
+from .models import Patient,Doctor
+from .serializers import RegisterSerializer, PatientSerializer,DoctorSerializer
+
 
 
 class RegisterView(generics.CreateAPIView):
@@ -28,3 +29,14 @@ class PatientDetailView(generics.RetrieveUpdateDestroyAPIView):
 
     def get_queryset(self):
         return Patient.objects.filter(user=self.request.user)
+
+class DoctorListCreateView(generics.ListCreateAPIView):
+    queryset = Doctor.objects.all()
+    serializer_class = DoctorSerializer
+    permission_classes = [IsAuthenticated]
+
+
+class DoctorDetailView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Doctor.objects.all()
+    serializer_class = DoctorSerializer
+    permission_classes = [IsAuthenticated]

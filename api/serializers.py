@@ -2,7 +2,8 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
-from .models import Patient
+from .models import Patient, Doctor
+
 
 
 class RegisterSerializer(serializers.ModelSerializer):
@@ -70,3 +71,12 @@ class PatientSerializer(serializers.ModelSerializer):
             "created_at",
         ]
         read_only_fields = ["id", "created_at"]
+
+
+
+
+class DoctorSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Doctor
+        fields = ["id", "name", "specialization", "email", "phone"]
+        read_only_fields = ["id"]
