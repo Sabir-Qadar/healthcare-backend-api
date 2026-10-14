@@ -4,6 +4,7 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 
 from .models import Patient,Doctor, PatientDoctorMapping
 from .serializers import RegisterSerializer, PatientSerializer,DoctorSerializer,PatientDoctorMappingSerializer
+from rest_framework.response import Response
 
 
 
@@ -62,7 +63,9 @@ class PatientDoctorMappingByPatientView(generics.ListAPIView):
         )
 
 
-class PatientDoctorMappingDetailView(generics.DestroyAPIView):
+
+
+class PatientDoctorMappingDetailView(generics.GenericAPIView):
     serializer_class = PatientDoctorMappingSerializer
     permission_classes = [IsAuthenticated]
 
@@ -70,3 +73,18 @@ class PatientDoctorMappingDetailView(generics.DestroyAPIView):
         return PatientDoctorMapping.objects.filter(
             patient__user=self.request.user
         )
+
+    def get(self, request, pk):
+        mappings = self.get_queryset().filter(patient_id=pk)
+        serializer = self.get_serializer(mappings, many=True)
+        return Response(serializer.data)
+
+    def delete(self, request, pk):
+        mapping = self.get_queryset().filter(pk=pk).first()
+
+        if mapping is None:
+            from rest_framework.exceptions import NotFound
+            raise NotFound("Mapping not found.")
+
+        mapping.delete()
+        return Response(status=204)

@@ -13,7 +13,6 @@ from api.views import (
     DoctorListCreateView,
     DoctorDetailView,
     PatientDoctorMappingListCreateView,
-    PatientDoctorMappingByPatientView,
     PatientDoctorMappingDetailView,
 )
 
@@ -27,29 +26,20 @@ class EmailTokenObtainPairView(TokenObtainPairView):
 urlpatterns = [
     path("admin/", admin.site.urls),
 
+    
     path("api/auth/register/", RegisterView.as_view(), name="register"),
     path("api/auth/login/", EmailTokenObtainPairView.as_view(), name="login"),
     path("api/auth/token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
 
+    
     path("api/patients/", PatientListCreateView.as_view(), name="patient-list-create"),
     path("api/patients/<int:pk>/", PatientDetailView.as_view(), name="patient-detail"),
+
+    
     path("api/doctors/", DoctorListCreateView.as_view(), name="doctor-list-create"),
     path("api/doctors/<int:pk>/", DoctorDetailView.as_view(), name="doctor-detail"),
-    
-   path(
-        "api/mappings/",
-        PatientDoctorMappingListCreateView.as_view(),
-        name="mapping-list-create",
-    ),
-   path(
-        "api/mappings/patient/<int:patient_id>/",
-        PatientDoctorMappingByPatientView.as_view(),
-        name="mapping-by-patient",
-    ),
-    path(
-        "api/mappings/<int:pk>/",
-        PatientDoctorMappingDetailView.as_view(),
-        name="mapping-detail",
-    ),
 
+    
+    path("api/mappings/", PatientDoctorMappingListCreateView.as_view(), name="mapping-list-create"),
+    path("api/mappings/<int:pk>/", PatientDoctorMappingDetailView.as_view(), name="mapping-detail"),
 ]
