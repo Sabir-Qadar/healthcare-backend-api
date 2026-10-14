@@ -2,7 +2,7 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
-from .models import Patient, Doctor
+from .models import Patient, Doctor, PatientDoctorMapping   
 
 
 
@@ -80,3 +80,24 @@ class DoctorSerializer(serializers.ModelSerializer):
         model = Doctor
         fields = ["id", "name", "specialization", "email", "phone"]
         read_only_fields = ["id"]
+
+class PatientDoctorMappingSerializer(serializers.ModelSerializer):
+    patient = serializers.PrimaryKeyRelatedField(
+        queryset=Patient.objects.all()
+    )
+    doctor = serializers.PrimaryKeyRelatedField(
+        queryset=Doctor.objects.all()
+    )
+
+    class Meta:
+        model = PatientDoctorMapping
+        fields = ["id", "patient", "doctor", "created_at"]
+        read_only_fields = ["id", "created_at"]
+
+    def validate_patient(self, value):
+        if value.user != self.context["request"].user:
+            raise serializers.ValidationError(
+                "You can only assign doctors to your own patients."
+            )
+        return value
+
